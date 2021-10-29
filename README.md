@@ -1,165 +1,154 @@
-# Cordova ZeroConf Plugin
+# capacitor-zeroconf
 
-This plugin allows you to browse and publish ZeroConf/Bonjour/mDNS services from applications developed using PhoneGap/Cordova 3.0 or newer and Ionic's Capacitor.
+Capacitor ZeroConf plugin
+
+This plugin allows you to browse and publish ZeroConf/Bonjour/mDNS services from applications developed using Ionic's Capacitor.
 
 This is not a background service. When the cordova view is destroyed/terminated, publish and watch operations are stopped.
 
-[CHANGELOG](https://github.com/becvert/cordova-plugin-zeroconf/blob/master/CHANGELOG.md)
+Android, iOS and [Electron](https://github.com/capacitor-community/electron) platforms are supported.
 
-## Installation
+The has been ported from [Cordova ZeroConf Plugin](https://github.com/becvert/cordova-plugin-zeroconf).
 
-### Cordova
-In your application project directory:
+## Install
 
 ```bash
-cordova plugin add cordova-plugin-zeroconf
-```
-
-### Capacitor (with typescript)
-```bash
-npm install cordova-plugin-zeroconf @ionic-native/zeroconf @ionic-native/core
+npm install capacitor-zeroconf
 npx cap sync
 ```
 
-## Usage
+or
 
-### Cordova
-```javascript
-var zeroconf = cordova.plugins.zeroconf;
-```
-
-### Capacitor (with typescript)
-You don't need to import it from the capacitor `Plugins` object, you can just directly import and use it. If you use the `@ionic-native/zeroconf` package you'll get typescript support.
-```javascript
-import { Zeroconf } from "@ionic-native/zeroconf";
-
-Zeroconf.watch("_http._tcp.", "local.").subscribe(result => {
-  console.log("Zeroconf Service Changed:");
-  console.log(result);
-});
-```
-
-## OS Specific Instructions
-### Android
-For Android, you may want to set the following options to speed discovery up:
- 
-```javascript 
-zeroconf.registerAddressFamily = 'ipv4'; // or 'ipv6' ('any' by default)
-zeroconf.watchAddressFamily = 'ipv4'; // or 'ipv6' ('any' by default)
-```
-
-### iOS
-On iOS, you need to configure a couple of things before you can use this plugin. Specifically, you need to add the following to your `Info.plist` file. Please note that if you misconfigure your `Info.plist` file, you will receive an unhelpful `null` error when trying to watch/publish.
-
-#### As Property List (Default View)
-`Privacy - Local Network Usage Description` - Enter a description that's shown to the user in the network permission prompt.
-`Bonjour services` - Add an item for each zeroconf service you wish to expose or search for, in this format: `_NameOfService._tcp.`.
-
-#### As XML
-```
-<key>NSBonjourServices</key>
-<array>
- <string>_NameOfService._tcp.</string>
-</array>
-
-<key>NSLocalNetworkUsageDescription</key>
-<string>To find your jCharge server.</string>
+```bash
+yarn add capacitor-zeroconf
+yarn cap sync
 ```
 
 ## API
 
-#### `getHostname(success, failure)`
-Returns this device's hostname.
+<docgen-index>
 
-```javascript
-zeroconf.getHostname(function success(hostname){
-    console.log(hostname); // ipad-of-becvert.local.
-});
+* [`getHostname()`](#gethostname)
+* [`register(...)`](#register)
+* [`unregister(...)`](#unregister)
+* [`stop()`](#stop)
+* [`watch(...)`](#watch)
+* [`unwatch(...)`](#unwatch)
+* [`close()`](#close)
+* [Interfaces](#interfaces)
+
+</docgen-index>
+
+<docgen-api>
+<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+### getHostname()
+
+```typescript
+getHostname() => Promise<{ hostname: string; }>
 ```
 
-#### `register(type, domain, name, port, txtRecord, success, failure)`
-Publishes a new service.
+**Returns:** <code>Promise&lt;{ hostname: string; }&gt;</code>
 
-```javascript
-zeroconf.register('_http._tcp.', 'local.', 'Becvert\'s iPad', 80, {
-    'foo' : 'bar'
-}, function success(result){
-    var action = result.action; // 'registered'
-    var service = result.service;
-});
+--------------------
+
+
+### register(...)
+
+```typescript
+register(request: ZeroConfRegisterRequest) => Promise<void>
 ```
 
-#### `unregister(type, domain, name, success, failure)`
-Unregisters a service.
+| Param         | Type                                                                        |
+| ------------- | --------------------------------------------------------------------------- |
+| **`request`** | <code><a href="#zeroconfregisterrequest">ZeroConfRegisterRequest</a></code> |
 
-```javascript
-zeroconf.unregister('_http._tcp.', 'local.', 'Becvert\'s iPad');
+--------------------
+
+
+### unregister(...)
+
+```typescript
+unregister(request: ZeroConfUnregisterRequest) => Promise<void>
 ```
 
-#### `stop(success, failure)`
-Unregisters all published services.
+| Param         | Type                                                                            |
+| ------------- | ------------------------------------------------------------------------------- |
+| **`request`** | <code><a href="#zeroconfunregisterrequest">ZeroConfUnregisterRequest</a></code> |
 
-```javascript
-zeroconf.stop();
+--------------------
+
+
+### stop()
+
+```typescript
+stop() => Promise<void>
 ```
 
-#### `watch(type, domain, success, failure)`
-Starts watching for services of the specified type.
+--------------------
 
-```javascript
-zeroconf.watch('_http._tcp.', 'local.', function(result) {
-    var action = result.action;
-    var service = result.service;
-    if (action == 'added') {
-        console.log('service added', service);
-    } else if (action == 'resolved') {
-        console.log('service resolved', service);
-        /* service : {
-        'domain' : 'local.',
-        'type' : '_http._tcp.',
-        'name': 'Becvert\'s iPad',
-        'port' : 80,
-        'hostname' : 'ipad-of-becvert.local',
-        'ipv4Addresses' : [ '192.168.1.125' ], 
-        'ipv6Addresses' : [ '2001:0:5ef5:79fb:10cb:1dbf:3f57:feb0' ],
-        'txtRecord' : {
-            'foo' : 'bar'
-        } */
-    } else {
-        console.log('service removed', service);
-    }
-});
+
+### watch(...)
+
+```typescript
+watch(request: ZeroConfWatchRequest, callback: ZeroConfWatchCallback) => Promise<CallbackID>
 ```
 
-#### `unwatch(type, domain, success, failure)`
-Stops watching for services of the specified type.
+| Param          | Type                                                                                        |
+| -------------- | ------------------------------------------------------------------------------------------- |
+| **`request`**  | <code><a href="#zeroconfwatchrequest">ZeroConfWatchRequest</a></code>                       |
+| **`callback`** | <code>(event: { action: ZeroConfWatchAction; service: ZeroConfService; }) =&gt; void</code> |
 
-```javascript
-zeroconf.unwatch('_http._tcp.', 'local.')
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### unwatch(...)
+
+```typescript
+unwatch(request: ZeroConfUnwatchRequest) => Promise<void>
 ```
 
-#### `close(success, failure)`
-Closes the service browser and stops watching.
+| Param         | Type                                                                  |
+| ------------- | --------------------------------------------------------------------- |
+| **`request`** | <code><a href="#zeroconfwatchrequest">ZeroConfWatchRequest</a></code> |
 
-```javascript
-zeroconf.close()
+--------------------
+
+
+### close()
+
+```typescript
+close() => Promise<void>
 ```
 
-#### `reInit(success, failure)`
-Re-initializes the entire plugin, which resets the browsers and services. Use this if the WiFi network has changed while the app is running.
+--------------------
 
-```javascript
-zeroconf.reInit()
-```
 
-## Credits
+### Interfaces
 
-#### Android
-It depends on [the JmDNS library](https://github.com/jmdns/jmdns)
 
-#### iOS
-Implements [Apple's Bonjour](https://developer.apple.com/bonjour/)
+#### ZeroConfRegisterRequest
 
-## Licence ##
+| Prop        | Type                                    |
+| ----------- | --------------------------------------- |
+| **`port`**  | <code>number</code>                     |
+| **`props`** | <code>{ [key: string]: string; }</code> |
 
-The MIT License
+
+#### ZeroConfUnregisterRequest
+
+| Prop       | Type                |
+| ---------- | ------------------- |
+| **`name`** | <code>string</code> |
+
+
+#### ZeroConfWatchRequest
+
+| Prop         | Type                |
+| ------------ | ------------------- |
+| **`type`**   | <code>string</code> |
+| **`domain`** | <code>string</code> |
+
+</docgen-api>

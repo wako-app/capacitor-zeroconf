@@ -1,42 +1,92 @@
 {
-    "name": "cordova-plugin-zeroconf",
-    "version": "1.4.2",
-    "description": "Cordova ZeroConf plugin",
-    "cordova": {
-        "id": "cordova-plugin-zeroconf",
-        "platforms": [
-            "android",
-            "ios"
-        ]
+  "name": "capacitor-zeroconf",
+  "version": "1.0.0",
+  "description": "Capacitor ZeroConf plugin",
+  "main": "dist/plugin.cjs.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "unpkg": "dist/plugin.js",
+  "files": [
+    "android/src/main/",
+    "android/build.gradle",
+    "dist/",
+    "ios/Plugin/",
+    "CapacitorZeroconf.podspec",
+    "electron"
+  ],
+  "author": "Marco Marche",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trik/capacitor-zeroconf.git"
+  },
+  "bugs": {
+    "url": "https://github.com/trik/capacitor-zeroconf/issues"
+  },
+  "keywords": [
+    "capacitor",
+    "plugin",
+    "native",
+    "network",
+    "zeroconf",
+    "bonjour",
+    "mdns",
+    "service",
+    "discovery"
+  ],
+  "scripts": {
+    "verify": "yarn verify:ios && yarn verify:android && yarn verify:web",
+    "verify:ios": "cd ios && pod install && xcodebuild -workspace Plugin.xcworkspace -scheme Plugin && cd ..",
+    "verify:android": "cd android && ./gradlew clean build test && cd ..",
+    "verify:web": "yarn build",
+    "lint": "yarn eslint && yarn prettier --check && yarn swiftlint lint",
+    "fmt": "yarn eslint --fix && yarn prettier --write && yarn swiftlint --config .swiftlint.yml --fix --format",
+    "eslint": "eslint . --ext ts",
+    "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
+    "swiftlint": "node-swiftlint",
+    "docgen": "docgen --api ZeroConfPlugin --output-readme README.md --output-json dist/docs.json",
+    "build": "yarn clean && yarn docgen && tsc && rollup -c rollup.config.js && yarn build-electron",
+    "build-electron": "tsc --project electron/tsconfig.json && rollup -c electron/rollup.config.js && rimraf ./electron/build",
+    "clean": "rimraf ./dist",
+    "watch": "tsc --watch",
+    "prepublishOnly": "yarn build"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^3.0.0",
+    "@capacitor/core": "^3.0.0",
+    "@capacitor/docgen": "^0.0.10",
+    "@capacitor/ios": "^3.0.0",
+    "@ionic/eslint-config": "^0.3.0",
+    "@ionic/prettier-config": "^1.0.1",
+    "@ionic/swiftlint-config": "^1.1.2",
+    "@types/bonjour": "^3.5.9",
+    "bonjour": "^3.5.0",
+    "eslint": "^7.11.0",
+    "prettier": "~2.2.0",
+    "prettier-plugin-java": "~1.0.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.32.0",
+    "swiftlint": "^1.0.1",
+    "typescript": "~4.0.3"
+  },
+  "peerDependencies": {
+    "@capacitor/core": "^3.0.0",
+    "bonjour": "^3.5.0"
+  },
+  "prettier": "@ionic/prettier-config",
+  "swiftlint": "@ionic/swiftlint-config",
+  "eslintConfig": {
+    "extends": "@ionic/eslint-config/recommended"
+  },
+  "capacitor": {
+    "ios": {
+      "src": "ios"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/becvert/cordova-plugin-zeroconf.git"
+    "android": {
+      "src": "android"
     },
-    "keywords": [
-        "ecosystem:cordova",
-        "cordova-android",
-        "cordova-ios",
-        "cordova",
-        "plugin",
-        "network",
-        "zeroconf",
-        "bonjour",
-        "mdns",
-        "service",
-        "discovery"
-    ],
-    "author": {
-        "name": "Sylvain Bréjeon",
-        "url": "https://github.com/becvert"
-    },
-    "contributors": {
-        "name": "Eric McNiece",
-        "url": "https://github.com/emcniece"
-    },
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/becvert/cordova-plugin-zeroconf/issues"
-    },
-    "homepage": "https://github.com/becvert/cordova-plugin-zeroconf"
+    "electron": {
+      "src": "electron"
+    }
+  }
 }
