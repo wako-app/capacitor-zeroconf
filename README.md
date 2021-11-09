@@ -28,6 +28,7 @@ yarn cap sync
 
 <docgen-index>
 
+* [`addListener(...)`](#addlistener)
 * [`getHostname()`](#gethostname)
 * [`register(...)`](#register)
 * [`unregister(...)`](#unregister)
@@ -41,6 +42,22 @@ yarn cap sync
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+### addListener(...)
+
+```typescript
+addListener(eventName: 'discover', listenerFunc: (result: ZeroConfWatchResult) => void) => PluginListenerHandle
+```
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>"discover"</code>                               |
+| **`listenerFunc`** | <code>(result: ZeroConfWatchResult) =&gt; void</code> |
+
+**Returns:** <code><a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
 
 ### getHostname()
 
@@ -91,13 +108,13 @@ stop() => Promise<void>
 ### watch(...)
 
 ```typescript
-watch(request: ZeroConfWatchRequest, callback: ZeroConfWatchCallback) => Promise<CallbackID>
+watch(request: ZeroConfWatchRequest, callback?: ZeroConfWatchCallback | undefined) => Promise<CallbackID>
 ```
 
-| Param          | Type                                                                                        |
-| -------------- | ------------------------------------------------------------------------------------------- |
-| **`request`**  | <code><a href="#zeroconfwatchrequest">ZeroConfWatchRequest</a></code>                       |
-| **`callback`** | <code>(event: { action: ZeroConfWatchAction; service: ZeroConfService; }) =&gt; void</code> |
+| Param          | Type                                                                  |
+| -------------- | --------------------------------------------------------------------- |
+| **`request`**  | <code><a href="#zeroconfwatchrequest">ZeroConfWatchRequest</a></code> |
+| **`callback`** | <code>ZeroConfWatchCallback</code>                                    |
 
 **Returns:** <code>Promise&lt;string&gt;</code>
 
@@ -127,6 +144,13 @@ close() => Promise<void>
 
 
 ### Interfaces
+
+
+#### PluginListenerHandle
+
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 
 #### ZeroConfRegisterRequest

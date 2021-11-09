@@ -1,3 +1,5 @@
+import type { PluginListenerHandle } from '@capacitor/core';
+
 export type CallbackID = string;
 
 export interface ZeroConfWatchRequest {
@@ -28,19 +30,24 @@ export interface ZeroConfService {
 }
 
 export type ZeroConfWatchAction = 'added' | 'removed' | 'resolved';
-export type ZeroConfWatchCallback = (event: {
+export type ZeroConfWatchResult = {
   action: ZeroConfWatchAction;
   service: ZeroConfService;
-}) => void;
+};
+export type ZeroConfWatchCallback = (event: ZeroConfWatchResult) => void;
 
 export interface ZeroConfPlugin {
+  addListener(
+    eventName: 'discover',
+    listenerFunc: (result: ZeroConfWatchResult) => void,
+  ): PluginListenerHandle;
   getHostname(): Promise<{ hostname: string }>;
   register(request: ZeroConfRegisterRequest): Promise<void>;
   unregister(request: ZeroConfUnregisterRequest): Promise<void>;
   stop(): Promise<void>;
   watch(
     request: ZeroConfWatchRequest,
-    callback: ZeroConfWatchCallback,
+    callback?: ZeroConfWatchCallback,
   ): Promise<CallbackID>;
   unwatch(request: ZeroConfUnwatchRequest): Promise<void>;
   close(): Promise<void>;

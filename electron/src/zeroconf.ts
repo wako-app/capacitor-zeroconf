@@ -1,5 +1,6 @@
 import * as bonjourMod from 'bonjour';
 import type { Browser, Bonjour, RemoteService, Service } from 'bonjour';
+import { EventEmitter } from 'events';
 import { hostname } from 'os';
 
 import type {
@@ -29,15 +30,35 @@ const bonjourToZeroConfService = (service: RemoteService): ZeroConfService => ({
   txtRecord: service.txt,
 });
 
-export class ZeroConf implements ZeroConfPlugin {
+type EvtListener = (...args: any[]) => void;
+let listenerId = 0;
+
+export class ZeroConf extends EventEmitter implements ZeroConfPlugin {
   private _bonjour: Bonjour;
   private _services: Service[] = [];
   private _browsers: {
     [key: string]: { request: ZeroConfWatchRequest; browser: Browser };
   } = {};
+  private listenersMap = new Map<number, EvtListener>();
 
   constructor() {
+    super();
     this._bonjour = bonjour();
+  }
+
+  addListener(
+    eventName: string | symbol,
+    listener: (...args: any[]) => void,
+  ): any {
+    super.addListener(eventName, listener);
+    const id = listenerId++;
+    this.listenersMap.set(id, listener);
+    return {
+      remove: () => {
+        const l = this.listenersMap.get(id);
+        this.removeListener(eventName, l);
+      },
+    };
   }
 
   getHostname(): Promise<{ hostname: string }> {
@@ -81,26 +102,40 @@ export class ZeroConf implements ZeroConfPlugin {
       this._bonjour.unpublishAll(() => resolve());
     });
   }
-  watch(
+  async watch(
     request: ZeroConfWatchRequest,
-    callback: ZeroConfWatchCallback,
+    callback?: ZeroConfWatchCallback,
   ): Promise<CallbackID> {
+    if (callback != null) {
+      throw new Error(
+        `You cannot use callback in electron. Please subscribe to discover events`,
+      );
+    }
     return new Promise<CallbackID>(resolve => {
-      const browser = this._bonjour.find({ type: request.type });
+      const search = request.type.split('.');
+      const type = search[0].replace(/^_/, '');
+      const protocol = search.length > 1 ? search[1].replace(/^_/, '') : 'tcp';
+      const browser = this._bonjour.find({ type, protocol });
       const id = `${callbackId++}`;
       browser.on('up', service =>
-        callback({
+        this.emit('discover', {
           action: 'added',
           service: bonjourToZeroConfService(service),
         }),
       );
       browser.on('down', service =>
-        callback({
+        this.emit('discover', {
           action: 'removed',
           service: bonjourToZeroConfService(service),
         }),
       );
       this._browsers[id] = { request, browser };
+      browser.services.forEach(service => {
+        this.emit('discover', {
+          action: 'added',
+          service: bonjourToZeroConfService(service),
+        });
+      });
       browser.start();
       resolve(id);
     });
