@@ -1,0 +1,225 @@
+{
+  "api": {
+    "name": "ZeroConfPlugin",
+    "slug": "zeroconfplugin",
+    "docs": "",
+    "tags": [],
+    "methods": [
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'discover', listenerFunc: (result: ZeroConfWatchResult) => void) => PluginListenerHandle",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "\"discover\""
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(result: ZeroConfWatchResult) => void"
+          }
+        ],
+        "returns": "PluginListenerHandle",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "PluginListenerHandle",
+          "ZeroConfWatchResult"
+        ],
+        "slug": "addlistener"
+      },
+      {
+        "name": "getHostname",
+        "signature": "() => Promise<{ hostname: string; }>",
+        "parameters": [],
+        "returns": "Promise<{ hostname: string; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "gethostname"
+      },
+      {
+        "name": "register",
+        "signature": "(request: ZeroConfRegisterRequest) => Promise<void>",
+        "parameters": [
+          {
+            "name": "request",
+            "docs": "",
+            "type": "ZeroConfRegisterRequest"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "ZeroConfRegisterRequest"
+        ],
+        "slug": "register"
+      },
+      {
+        "name": "unregister",
+        "signature": "(request: ZeroConfUnregisterRequest) => Promise<void>",
+        "parameters": [
+          {
+            "name": "request",
+            "docs": "",
+            "type": "ZeroConfUnregisterRequest"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "ZeroConfUnregisterRequest"
+        ],
+        "slug": "unregister"
+      },
+      {
+        "name": "stop",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "stop"
+      },
+      {
+        "name": "watch",
+        "signature": "(request: ZeroConfWatchRequest, callback?: ZeroConfWatchCallback | undefined) => Promise<CallbackID>",
+        "parameters": [
+          {
+            "name": "request",
+            "docs": "",
+            "type": "ZeroConfWatchRequest"
+          },
+          {
+            "name": "callback",
+            "docs": "",
+            "type": "ZeroConfWatchCallback | undefined"
+          }
+        ],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "ZeroConfWatchRequest",
+          "ZeroConfWatchCallback",
+          "CallbackID"
+        ],
+        "slug": "watch"
+      },
+      {
+        "name": "unwatch",
+        "signature": "(request: ZeroConfUnwatchRequest) => Promise<void>",
+        "parameters": [
+          {
+            "name": "request",
+            "docs": "",
+            "type": "ZeroConfWatchRequest"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "ZeroConfUnwatchRequest"
+        ],
+        "slug": "unwatch"
+      },
+      {
+        "name": "close",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "close"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [
+    {
+      "name": "PluginListenerHandle",
+      "slug": "pluginlistenerhandle",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "remove",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "() => Promise<void>"
+        }
+      ]
+    },
+    {
+      "name": "ZeroConfRegisterRequest",
+      "slug": "zeroconfregisterrequest",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "port",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "props",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "{ [key: string]: string; }"
+        }
+      ]
+    },
+    {
+      "name": "ZeroConfUnregisterRequest",
+      "slug": "zeroconfunregisterrequest",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "name",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "ZeroConfWatchRequest",
+      "slug": "zeroconfwatchrequest",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "domain",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "enums": []
+}
